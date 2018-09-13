@@ -1,0 +1,7 @@
+﻿cl : Command line warning D9025: overriding '/GS' with '/GS-'
+  glew.c
+C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(1198,5): warning MSB8012: TargetPath(C:\Users\Student\Desktop\glew-2.1.0\build\vc6\.\../../lib\glew_shared.dll) does not match the Linker's OutputFile property value (C:\Users\Student\Desktop\glew-2.1.0\bin\glew32d.dll). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
+C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(1200,5): warning MSB8012: TargetName(glew_shared) does not match the Linker's OutputFile property value (glew32d). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
+     Creating library .\../../lib\glew32d.lib and object .\../../lib\glew32d.exp
+  glew_shared.vcxproj -> C:\Users\Student\Desktop\glew-2.1.0\build\vc6\.\../../lib\glew_shared.dll
+  glew_shared.vcxproj -> .\../../lib\glew_shared.pdb (Full PDB)
