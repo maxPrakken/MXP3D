@@ -1,5 +1,0 @@
-﻿  glew.c
-C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(1369,5): warning MSB8012: TargetPath(C:\Users\Student\Desktop\glew-2.1.0\build\vc6\.\../../lib\glew_static.lib) does not match the Library's OutputFile property value (C:\Users\Student\Desktop\glew-2.1.0\lib\glew32sd.lib). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Lib.OutputFile).
-C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(1371,5): warning MSB8012: TargetName(glew_static) does not match the Library's OutputFile property value (glew32sd). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Lib.OutputFile).
-LINK : warning LNK4068: /MACHINE not specified; defaulting to X86
-  glew_static.vcxproj -> C:\Users\Student\Desktop\glew-2.1.0\build\vc6\.\../../lib\glew_static.lib
