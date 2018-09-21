@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
 
 #include <GL/glew.h>
 
@@ -12,8 +13,12 @@ using namespace glm;
 
 #include <common/shader.hpp>
 
+#include <time.h>
+
 int main( void )
 {
+	float timer = 0;
+
 	// Initialise GLFW
 	glewExperimental = true; //needed for core profile
 	if( !glfwInit() )
@@ -94,8 +99,8 @@ int main( void )
 		1.0f,-1.0f, 1.0f
 	};
 
-	// One color for each vertex. They were generated randomly.
-	static const GLfloat g_color_buffer_data[] = {
+	// One color for each vertex. uncomment list for static colors
+	static GLfloat g_color_buffer_data[12*3*3]/* = {
 		0.583f,  0.771f,  0.014f,
 		0.609f,  0.115f,  0.436f,
 		0.327f,  0.483f,  0.844f,
@@ -132,7 +137,13 @@ int main( void )
 		0.673f,  0.211f,  0.457f,
 		0.820f,  0.883f,  0.371f,
 		0.982f,  0.099f,  0.879f
-	};
+	}*/;
+	//random initial colors. gets verified about every half second(not sure exactly its fps dependant still xD)
+	for (int v = 0; v < 12 * 3; v++) {
+		g_color_buffer_data[3 * v + 0] = (rand() % 10000) / 10000.0;
+		g_color_buffer_data[3 * v + 1] = (rand() % 10000) / 10000.0;
+		g_color_buffer_data[3 * v + 2] = (rand() % 10000) / 10000.0;
+	}
 
 	// This will identify our vertex buffer
 	GLuint vertexbuffer;
@@ -148,6 +159,11 @@ int main( void )
 	glGenBuffers(1, &colorbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
+
+	// Enable depth test
+	glEnable(GL_DEPTH_TEST);
+	// Accept fragment if it closer to the camera than the former one
+	glDepthFunc(GL_LESS);
 
 	// Ensure we can capture the escape key being pressed below
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
@@ -166,7 +182,7 @@ int main( void )
 
 	// Camera matrix
 	glm::mat4 View = glm::lookAt(
-		glm::vec3(4, 3, 3), // Camera is at (4,3,3), in World Space
+		glm::vec3(4, 3, -3), // Camera is at (4,3,3), in World Space
 		glm::vec3(0, 0, 0), // and looks at the origin
 		glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
 	);
@@ -181,6 +197,11 @@ int main( void )
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 
 	do{
+		// timer for color change
+		std::cout << timer << std::endl;
+		timer++;
+
+		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Send our transformation to the currently bound shader, in the "MVP" uniform
@@ -202,7 +223,6 @@ int main( void )
 			(void*)0            // array buffer offset
 		);
 
-		// 2nd attribute buffer : color
 		// 2nd attribute buffer : colors
 		glEnableVertexAttribArray(1);
 		glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
@@ -215,7 +235,19 @@ int main( void )
 			(void*)0                          // array buffer offset
 		);
 
-		// Draw the triangle !
+		glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
+
+		//random shader colors on timer
+		if (timer > 100) {
+			for (int v = 0; v < 12 * 3; v++) {
+				g_color_buffer_data[3 * v + 0] = (rand() % 10000) / 10000.0;
+				g_color_buffer_data[3 * v + 1] = (rand() % 10000) / 10000.0;
+				g_color_buffer_data[3 * v + 2] = (rand() % 10000) / 10000.0;
+			}
+			timer = 0;
+		}
+
+		// Draw the cube!
 		glDrawArrays(GL_TRIANGLES, 0, 12*3); // 12*3 indices starting at 0 -> 12 triangles -> 6 squares
 		glDisableVertexAttribArray(0);
 
