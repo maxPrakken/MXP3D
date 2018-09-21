@@ -198,7 +198,6 @@ int main( void )
 
 	do{
 		// timer for color change
-		std::cout << timer << std::endl;
 		timer++;
 
 		// Clear the screen
@@ -245,6 +244,7 @@ int main( void )
 				g_color_buffer_data[3 * v + 2] = (rand() % 10000) / 10000.0;
 			}
 			timer = 0;
+			std::cout << "timer running" << std::endl;
 		}
 
 		// Draw the cube!
