@@ -1,7 +1,3 @@
-// Include GLFW
-#include <GLFW/glfw3.h>
-extern GLFWwindow* window; // The "extern" keyword here is to access the variable "window" declared in tutorialXXX.cpp. This is a hack to keep the tutorials simple. Please avoid this.
-
 // Include GLM
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -42,10 +38,10 @@ void computeMatricesFromInputs(float deltaTime){
 
 	// Get mouse position
 	double xpos, ypos;
-	glfwGetCursorPos(window, &xpos, &ypos);
+	glfwGetCursorPos(Renderer::getInstance()->getWindow(), &xpos, &ypos);
 
 	// Reset mouse position for next frame
-	glfwSetCursorPos(window, resX/2, resY/2);
+	glfwSetCursorPos(Renderer::getInstance()->getWindow(), resX/2, resY/2);
 
 	// Compute new orientation
 	horizontalAngle += mouseSpeed * float(resX/2 - xpos );
@@ -79,19 +75,19 @@ void computeMatricesFromInputs(float deltaTime){
 	glm::vec3 up = glm::cross( right, direction );
 
 	// Move forward
-	if (glfwGetKey( window, GLFW_KEY_W ) == GLFW_PRESS){
+	if (glfwGetKey(Renderer::getInstance()->getWindow(), GLFW_KEY_W ) == GLFW_PRESS){
 		position += direction * deltaTime * speed;
 	}
 	// Move backward
-	if (glfwGetKey( window, GLFW_KEY_S ) == GLFW_PRESS){
+	if (glfwGetKey(Renderer::getInstance()->getWindow(), GLFW_KEY_S ) == GLFW_PRESS){
 		position -= direction * deltaTime * speed;
 	}
 	// Strafe right
-	if (glfwGetKey( window, GLFW_KEY_D ) == GLFW_PRESS){
+	if (glfwGetKey(Renderer::getInstance()->getWindow(), GLFW_KEY_D ) == GLFW_PRESS){
 		position += right * deltaTime * speed;
 	}
 	// Strafe left
-	if (glfwGetKey( window, GLFW_KEY_A ) == GLFW_PRESS){
+	if (glfwGetKey(Renderer::getInstance()->getWindow(), GLFW_KEY_A ) == GLFW_PRESS){
 		position -= right * deltaTime * speed;
 	}
 

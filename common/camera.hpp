@@ -2,6 +2,7 @@
 #define CONTROLS_HPP
 
 #include <iostream>
+#include "renderer.h"
 
 void computeMatricesFromInputs(float deltaTime);
 glm::mat4 getViewMatrix();

@@ -74,6 +74,8 @@ add_executable(game
 	common/quaternion_utils.hpp
 	common/vboindexer.cpp
 	common/vboindexer.hpp
+	common/renderer.cpp
+	common/renderer.h
 )
 target_link_libraries(game
 	${ALL_LIBS}
