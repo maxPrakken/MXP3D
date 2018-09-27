@@ -28,7 +28,7 @@ void initText2D(const char * texturePath){
 	glGenBuffers(1, &Text2DUVBufferID);
 
 	// Initialize Shader
-	Text2DShaderID = LoadShaders( "../playground/shaders/textShader.vert", "../playground/shaders/textShader.frag" );
+	Text2DShaderID = LoadShaders( "../common/shaders/textShader.vert", "../common/shaders/textShader.frag" );
 
 	// Initialize uniforms' IDs
 	Text2DUniformID = glGetUniformLocation( Text2DShaderID, "myTextureSampler" );
@@ -104,11 +104,10 @@ void printText2D(const char * text, int x, int y, int size){
 	// Draw call
 	glDrawArrays(GL_TRIANGLES, 0, vertices.size() );
 
-	glDisable(GL_BLEND);
+	//glDisable(GL_BLEND);
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
-
 }
 
 void cleanupText2D(){
