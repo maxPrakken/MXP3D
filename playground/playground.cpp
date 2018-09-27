@@ -23,8 +23,16 @@ using namespace glm;
 #include <common/config.h>
 
 int main(void) {
+
 	int resX = RESOLUTION_X;
 	int resY = RESOLUTION_Y;
+	
+	float deltaTime;
+	int FPS = 0;
+
+	// glfwGetTime is called only once, the first time this function is called
+	static double lastTime = glfwGetTime();
+	static double lastTimeFPS = glfwGetTime();
 
 	// Initialise GLFW
 	if (!glfwInit()) {
@@ -33,7 +41,7 @@ int main(void) {
 		return -1;
 	}
 
-	glfwWindowHint(GLFW_SAMPLES, 4);
+	glfwWindowHint(GLFW_SAMPLES, 4); //how many AA you use
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
@@ -102,37 +110,60 @@ int main(void) {
 	std::vector<glm::vec3> normals;
 	bool res = loadOBJ("../common/models/monkey.obj", vertices, uvs, normals);
 
-	// Load it into a VBO
+	std::vector<unsigned short> indices;
+	std::vector<glm::vec3> indexed_vertices;
+	std::vector<glm::vec2> indexed_uvs;
+	std::vector<glm::vec3> indexed_normals;
+	indexVBO(vertices, uvs, normals, indices, indexed_vertices, indexed_uvs, indexed_normals);
 
 	GLuint vertexbuffer;
 	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, indexed_vertices.size() * sizeof(glm::vec3), &indexed_vertices[0], GL_STATIC_DRAW);
 
 	GLuint uvbuffer;
 	glGenBuffers(1, &uvbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
-	glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, indexed_uvs.size() * sizeof(glm::vec2), &indexed_uvs[0], GL_STATIC_DRAW);
 
 	GLuint normalbuffer;
 	glGenBuffers(1, &normalbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
-	glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, indexed_normals.size() * sizeof(glm::vec3), &indexed_normals[0], GL_STATIC_DRAW);
+
+	GLuint elementbuffer;
+	glGenBuffers(1, &elementbuffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned short), &indices[0], GL_STATIC_DRAW);
 
 	// Get a handle for our "LightPosition" uniform
 	glUseProgram(programID);
 	GLuint LightID = glGetUniformLocation(programID, "LightPosition_worldspace");
 
 	do {
-
 		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		// Compute time difference between current and last frame
+		double currentTime = glfwGetTime();
+		deltaTime = float(currentTime - lastTime);
+
+		if (SHOW_FPS) {
+			// Measure FPS and print FPS
+			FPS++;
+			if (currentTime - lastTimeFPS >= 1.0) { // If last prinf() was more than 1 sec ago
+												 // printf and reset timer
+				std::cout << FPS << " FPS" << std::endl;
+				FPS = 0;
+				lastTimeFPS += 1.0;
+			}
+		}
 
 		// Use our shader
 		glUseProgram(programID);
 
 		// Compute the MVP matrix from keyboard and mouse input
-		computeMatricesFromInputs();
+		computeMatricesFromInputs(deltaTime);
 		glm::mat4 ProjectionMatrix = getProjectionMatrix();
 		glm::mat4 ViewMatrix = getViewMatrix();
 		glm::mat4 ModelMatrix = glm::mat4(1.0);
@@ -189,8 +220,16 @@ int main(void) {
 			(void*)0                          // array buffer offset
 		);
 
+		// Index buffer
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer);
+		
 		// Draw the triangles !
-		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+		glDrawElements(
+			GL_TRIANGLES,      // mode
+			indices.size(),    // count
+			GL_UNSIGNED_SHORT,   // type
+			(void*)0           // element array buffer offset
+		);
 
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
@@ -200,6 +239,9 @@ int main(void) {
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
+		// For the next frame, the "last time" will be "now"
+		lastTime = currentTime;
+
 	} // Check if the ESC key was pressed or the window was closed
 	while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
 		   glfwWindowShouldClose(window) == 0);
@@ -208,6 +250,7 @@ int main(void) {
 	glDeleteBuffers(1, &vertexbuffer);
 	glDeleteBuffers(1, &uvbuffer);
 	glDeleteBuffers(1, &normalbuffer);
+	glDeleteBuffers(1, &elementbuffer);
 	glDeleteProgram(programID);
 	glDeleteTextures(1, &Texture);
 	glDeleteVertexArrays(1, &VertexArrayID);
@@ -217,4 +260,3 @@ int main(void) {
 
 	return 0;
 }
-

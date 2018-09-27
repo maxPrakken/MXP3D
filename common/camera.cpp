@@ -36,18 +36,9 @@ float mouseSpeed = MOUSE_SENSITIVITY;
 int resX = RESOLUTION_X;
 int resY = RESOLUTION_Y;
 
-void computeMatricesFromInputs(){
-
-	std::cout << verticalAngle << std::endl;
+void computeMatricesFromInputs(float deltaTime){
 
 	glEnable(GL_CULL_FACE); //enables backface culling (no rendering of stuff inside for example a cube)
-
-	// glfwGetTime is called only once, the first time this function is called
-	static double lastTime = glfwGetTime();
-
-	// Compute time difference between current and last frame
-	double currentTime = glfwGetTime();
-	float deltaTime = float(currentTime - lastTime);
 
 	// Get mouse position
 	double xpos, ypos;
@@ -114,7 +105,4 @@ void computeMatricesFromInputs(){
 								position+direction, // and looks here : at the same position, plus "direction"
 								up                  // Head is up (set to 0,-1,0 to look upside-down)
 						   );
-
-	// For the next frame, the "last time" will be "now"
-	lastTime = currentTime;
 }
