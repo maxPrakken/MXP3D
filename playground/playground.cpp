@@ -13,13 +13,12 @@ using namespace glm;
 
 #include <common/shader.hpp>
 #include <common/texture.hpp>
+#include <common/controls.hpp>
 
 #include <time.h>
 
 int main( void )
 {
-	float timer = 0;
-
 	GLuint loadBMP_custom(const char * imagepath);
 
 	// Initialise GLFW
@@ -175,24 +174,6 @@ int main( void )
 	// black background
 	glClearColor(0.1f, 0.0f, 0.0f, 0.0f);
 
-	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-	glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 1024.0f / 768.0f, 0.1f, 100.0f);
-
-	// Or, for an ortho camera :
-	//glm::mat4 Projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f); // In world coordinates
-
-	// Camera matrix
-	glm::mat4 View = glm::lookAt(
-		glm::vec3(4, 3, -3), // Camera is at (4,3,3), in World Space
-		glm::vec3(0, 0, 0), // and looks at the origin
-		glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
-	);
-
-	// Model matrix : an identity matrix (model will be at the origin)
-	glm::mat4 Model = glm::mat4(1.0f);
-	// Our ModelViewProjection : multiplication of our 3 matrices
-	glm::mat4 mvp = Projection * View * Model; // Remember, matrix multiplication is the other way around
-
 	// Get a handle for our "MVP" uniform
 	// Only during the initialisation
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
@@ -200,6 +181,19 @@ int main( void )
 	do{
 		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		computeMatricesFromInputs();
+		// Model matrix : an identity matrix (model will be at the origin)
+		glm::mat4 Model = glm::mat4(1.0f);
+		// Our ModelViewProjection : multiplication of our 3 matrices
+		glm::mat4 mvp = getProjectionMatrix() * getViewMatrix() * Model; // Remember, matrix multiplication is the other way around
+
+		// Compute the MVP matrix from keyboard and mouse input
+		computeMatricesFromInputs();
+		glm::mat4 ProjectionMatrix = getProjectionMatrix();
+		glm::mat4 ViewMatrix = getViewMatrix();
+		glm::mat4 ModelMatrix = glm::mat4(1.0);
+		glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
 
 		// Send our transformation to the currently bound shader, in the "MVP" uniform
 		// This is done in the main loop since each model will have a different MVP matrix (At least for the M part)
@@ -254,64 +248,4 @@ int main( void )
 	glfwTerminate();
 
 	return 0;
-}
-
-//load custom .bmp texture
-GLuint loadBMP_custom(const char * imagepath) {
-	// Data read from the header of the BMP file
-	unsigned char header[54]; // Each BMP file begins by a 54-bytes header
-	unsigned int dataPos;     // Position in the file where the actual data begins
-	unsigned int width, height;
-	unsigned int imageSize;   // = width*height*3
-							  // Actual RGB data
-	unsigned char * data;
-
-	// Open the file
-	FILE * file = fopen(imagepath, "rb");
-	if (!file) { printf("Image could not be opened\n"); return 0; }
-
-	if (fread(header, 1, 54, file) != 54) { // If not 54 bytes read : problem
-		printf("Not a correct BMP file\n");
-		return false;
-	}
-
-	if (header[0] != 'B' || header[1] != 'M') {
-		printf("Not a correct BMP file\n");
-		return 0;
-	}
-
-	// Read ints from the byte array
-	dataPos = *(int*)&(header[0x0A]);
-	imageSize = *(int*)&(header[0x22]);
-	width = *(int*)&(header[0x12]);
-	height = *(int*)&(header[0x16]);
-
-	// Some BMP files are misformatted, guess missing information
-	if (imageSize == 0)    imageSize = width*height * 3; // 3 : one byte for each Red, Green and Blue component
-	if (dataPos == 0)      dataPos = 54; // The BMP header is done that way
-
-	data = new unsigned char[imageSize]; // Create a buffer
-
-	// Read the actual data from the file into the buffer
-	fread(data, 1, imageSize, file);
-
-	//Everything is in memory now, the file can be closed
-	fclose(file);
-
-	// Create one OpenGL texture
-	GLuint textureID;
-	glGenTextures(1, &textureID);
-
-	// "Bind" the newly created texture : all future texture functions will modify this texture
-	glBindTexture(GL_TEXTURE_2D, textureID);
-
-	// Give the image to OpenGL
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_BGR, GL_UNSIGNED_BYTE, data);
-
-	// When MAGnifying the image (no bigger mipmap available), use LINEAR filtering
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	// When MINifying the image, use a LINEAR blend of two mipmaps, each filtered LINEARLY too
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	// Generate mipmaps, by the way.
-	glGenerateMipmap(GL_TEXTURE_2D);
 }
