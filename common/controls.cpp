@@ -31,16 +31,19 @@ float verticalAngle = 0.0f;
 float initialFoV = 45.0f;
 
 float speed = 3.0f; // 3 units / second
-float mouseSpeed = 0.005f;
+float mouseSpeed = MOUSE_SENSITIVITY;
 
 int resX = RESOLUTION_X;
 int resY = RESOLUTION_Y;
 
 void computeMatricesFromInputs(){
 
+	//makes cursor hidden if CURSOR_HIDDEN equals true in config.h
 	if (CURSOR_HIDDEN) {
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	}
+
+	glEnable(GL_CULL_FACE); //enables backface culling (no rendering of stuff inside for example a cube)
 
 	// glfwGetTime is called only once, the first time this function is called
 	static double lastTime = glfwGetTime();
