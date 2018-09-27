@@ -61,8 +61,8 @@ add_executable(playground
 	playground/playground.cpp
 	common/shader.cpp
 	common/shader.hpp
-	common/controls.cpp
-	common/controls.hpp
+	common/camera.cpp
+	common/camera.hpp
 	common/text2D.cpp
 	common/text2D.hpp
 	common/texture.cpp

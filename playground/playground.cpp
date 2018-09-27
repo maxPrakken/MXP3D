@@ -13,7 +13,7 @@ using namespace glm;
 
 #include <common/shader.hpp>
 #include <common/texture.hpp>
-#include <common/controls.hpp>
+#include <common/camera.hpp>
 #include <common/config.h>
 
 #include <time.h>
