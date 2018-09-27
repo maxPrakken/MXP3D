@@ -14,11 +14,15 @@ using namespace glm;
 #include <common/shader.hpp>
 #include <common/texture.hpp>
 #include <common/controls.hpp>
+#include <common/config.h>
 
 #include <time.h>
 
 int main( void )
 {
+	int resX = RESOLUTION_X;
+	int resY = RESOLUTION_Y;
+
 	GLuint loadBMP_custom(const char * imagepath);
 
 	// Initialise GLFW
@@ -38,7 +42,7 @@ int main( void )
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Open a window and create its OpenGL context
-	window = glfwCreateWindow( 1024, 768, "Playground", NULL, NULL);
+	window = glfwCreateWindow( resX, resY, "Playground", NULL, NULL);
 	if( window == NULL ){
 		fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
 		getchar();
