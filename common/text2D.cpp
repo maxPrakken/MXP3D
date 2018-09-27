@@ -104,7 +104,8 @@ void printText2D(const char * text, int x, int y, int size){
 	// Draw call
 	glDrawArrays(GL_TRIANGLES, 0, vertices.size() );
 
-	//glDisable(GL_BLEND);
+	//comment this line to use tranparent textures, normals cant be used when this line is commented!!!!
+	glDisable(GL_BLEND);
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);

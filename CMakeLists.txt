@@ -38,7 +38,6 @@ include_directories(
 	external/glm-0.9.7.1/
 	external/glew-1.13.0/include/
 	external/assimp-3.0.1270/include/
-	external/bullet-2.81-rev2613/src/
 	.
 )
 
@@ -56,9 +55,9 @@ add_definitions(
 	-D_CRT_SECURE_NO_WARNINGS
 )
 
-# User playground
-add_executable(playground 
-	playground/playground.cpp
+# User game
+add_executable(game 
+	game/main.cpp
 	common/shader.cpp
 	common/shader.hpp
 	common/camera.cpp
@@ -76,12 +75,12 @@ add_executable(playground
 	common/vboindexer.cpp
 	common/vboindexer.hpp
 )
-target_link_libraries(playground
+target_link_libraries(game
 	${ALL_LIBS}
 )
 # Xcode and Visual working directories
-set_target_properties(playground PROPERTIES XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/playground/")
-create_target_launcher(playground WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/playground/")
+set_target_properties(game PROPERTIES XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/game/")
+create_target_launcher(game WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/game/")
 
 
 SOURCE_GROUP(common REGULAR_EXPRESSION ".*/common/.*" )
@@ -93,8 +92,8 @@ SOURCE_GROUP(shaders REGULAR_EXPRESSION ".*/.*shader$" )
 if (NOT ${CMAKE_GENERATOR} MATCHES "Xcode" )
 
 add_custom_command(
-   TARGET playground POST_BUILD
-   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/playground${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/playground/"
+   TARGET game POST_BUILD
+   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/game${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/game/"
 )
 
 elseif (${CMAKE_GENERATOR} MATCHES "Xcode" )
