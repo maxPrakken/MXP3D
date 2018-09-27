@@ -8,6 +8,7 @@
 
 // Include GLFW
 #include <GLFW/glfw3.h>
+
 GLFWwindow* window;
 
 // Include GLM
@@ -85,6 +86,7 @@ int main(void) {
 
 	// Cull triangles which normal is not towards the camera
 	glEnable(GL_CULL_FACE);
+	//glDisable(GL_CULL_FACE);
 
 	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
@@ -99,6 +101,7 @@ int main(void) {
 	GLuint ModelMatrixID = glGetUniformLocation(programID, "M");
 
 	// Load the texture
+	//GLuint Texture = loadBMP_custom("uvtemplate.bmp");
 	GLuint Texture = loadDDS("uvmap.DDS");
 
 	// Get a handle for our "myTextureSampler" uniform
@@ -139,6 +142,10 @@ int main(void) {
 	// Get a handle for our "LightPosition" uniform
 	glUseProgram(programID);
 	GLuint LightID = glGetUniformLocation(programID, "LightPosition_worldspace");
+
+	// Enable blending
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	do {
 		// Clear the screen
