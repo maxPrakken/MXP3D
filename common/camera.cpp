@@ -38,6 +38,8 @@ int resY = RESOLUTION_Y;
 
 void computeMatricesFromInputs(){
 
+	std::cout << verticalAngle << std::endl;
+
 	//makes cursor hidden if CURSOR_HIDDEN equals true in config.h
 	if (CURSOR_HIDDEN) {
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
@@ -61,7 +63,17 @@ void computeMatricesFromInputs(){
 
 	// Compute new orientation
 	horizontalAngle += mouseSpeed * float(resX/2 - xpos );
-	verticalAngle   += mouseSpeed * float( resY/2 - ypos );
+	//restricted vertical angle. can't do loops anymore now
+	if (verticalAngle > 1.5f) {
+		verticalAngle = 1.5f;
+	}
+	else if (verticalAngle < -1.5f) {
+		verticalAngle = -1.5f;
+	}
+	else {
+		verticalAngle += mouseSpeed * float(resY / 2 - ypos);
+	}
+
 
 	// Direction : Spherical coordinates to Cartesian coordinates conversion
 	glm::vec3 direction(
