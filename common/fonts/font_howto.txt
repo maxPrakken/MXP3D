@@ -1,0 +1,22 @@
+to make a font
+
+step one:
+	open CBFG, and make a font with a 512X512 resolution
+	
+step two:
+	make sure character start is at 0
+	
+step three:
+	export as bmp
+	
+step four: 
+	go into the compresonator and import the .bmp
+	
+step five:
+	give it the maximum available mipmaps (10 preferably)
+	
+step six:
+	export it as a DDS DXT3 with adaptive checked
+	
+step seven: 
+	enjoy your font

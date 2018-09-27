@@ -22,6 +22,9 @@ using namespace glm;
 #include <common/objloader.hpp>
 #include <common/vboindexer.hpp>
 #include <common/config.h>
+#include <common/text2D.hpp>
+
+#include <string>
 
 int main(void) {
 
@@ -30,6 +33,7 @@ int main(void) {
 	
 	float deltaTime;
 	int FPS = 0;
+	int HFPS = 0;
 
 	// glfwGetTime is called only once, the first time this function is called
 	static double lastTime = glfwGetTime();
@@ -93,7 +97,7 @@ int main(void) {
 	glBindVertexArray(VertexArrayID);
 
 	// Create and compile our GLSL program from the shaders
-	GLuint programID = LoadShaders("shader.vert", "shader.frag");
+	GLuint programID = LoadShaders("shaders/shader.vert", "shaders/shader.frag");
 
 	// Get a handle for our "MVP" uniform
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
@@ -102,7 +106,7 @@ int main(void) {
 
 	// Load the texture
 	//GLuint Texture = loadBMP_custom("uvtemplate.bmp");
-	GLuint Texture = loadDDS("uvmap.DDS");
+	GLuint Texture = loadDDS("textures/uvmap.DDS");
 
 	// Get a handle for our "myTextureSampler" uniform
 	GLuint TextureID = glGetUniformLocation(programID, "myTextureSampler");
@@ -147,6 +151,9 @@ int main(void) {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	//initialize text2D
+	initText2D("../common/fonts/font.DDS");
+
 	do {
 		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -156,14 +163,16 @@ int main(void) {
 		deltaTime = float(currentTime - lastTime);
 
 		if (SHOW_FPS) {
-			// Measure FPS and print FPS
+			// Measure FPS and show FPS on screen
 			FPS++;
 			if (currentTime - lastTimeFPS >= 1.0) { // If last prinf() was more than 1 sec ago
-												 // printf and reset timer
-				std::cout << FPS << " FPS" << std::endl;
+				HFPS = FPS;
 				FPS = 0;
 				lastTimeFPS += 1.0;
 			}
+			std::string str = std::to_string(HFPS);
+			const char * c = str.c_str();
+			printText2D(c, 750, 550, 25);
 		}
 
 		// Use our shader

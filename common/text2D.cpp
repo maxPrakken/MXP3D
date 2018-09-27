@@ -28,13 +28,14 @@ void initText2D(const char * texturePath){
 	glGenBuffers(1, &Text2DUVBufferID);
 
 	// Initialize Shader
-	Text2DShaderID = LoadShaders( "TextVertexShader.vertexshader", "TextVertexShader.fragmentshader" );
+	Text2DShaderID = LoadShaders( "../playground/shaders/textShader.vert", "../playground/shaders/textShader.frag" );
 
 	// Initialize uniforms' IDs
 	Text2DUniformID = glGetUniformLocation( Text2DShaderID, "myTextureSampler" );
 
 }
 
+// x = xpos, y = ypos, size is x & y size per letter
 void printText2D(const char * text, int x, int y, int size){
 
 	unsigned int length = strlen(text);
