@@ -40,11 +40,6 @@ void computeMatricesFromInputs(){
 
 	std::cout << verticalAngle << std::endl;
 
-	//makes cursor hidden if CURSOR_HIDDEN equals true in config.h
-	if (CURSOR_HIDDEN) {
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-	}
-
 	glEnable(GL_CULL_FACE); //enables backface culling (no rendering of stuff inside for example a cube)
 
 	// glfwGetTime is called only once, the first time this function is called
