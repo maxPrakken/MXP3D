@@ -1,5 +1,4 @@
 #include "renderer.h"
-#include "vector2.h"
 
 Renderer* Renderer::instance = NULL;
 
@@ -313,20 +312,6 @@ void Renderer::update() {
 		GL_UNSIGNED_SHORT, // type
 		(void*)0           // element array buffer offset
 	);
-
-	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
-	glDisableVertexAttribArray(2);
-	glDisableVertexAttribArray(3);
-	glDisableVertexAttribArray(4);
-
-
-	////////////////////////////////////////////////////////
-	// DEBUG ONLY !!!
-	// Don't use this in real code !!
-	////////////////////////////////////////////////////////
-
-
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadMatrixf((const GLfloat*)&ProjectionMatrix[0]);
