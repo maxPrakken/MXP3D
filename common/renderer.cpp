@@ -1,4 +1,5 @@
 #include "renderer.h"
+#include "vector2.h"
 
 Renderer* Renderer::instance = NULL;
 

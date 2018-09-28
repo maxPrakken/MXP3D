@@ -76,6 +76,10 @@ add_executable(game
 	common/vboindexer.hpp
 	common/renderer.cpp
 	common/renderer.h
+	common/entity.cpp
+	common/entity.h
+	common/mxVector.cpp
+	common/mxVector.h
 )
 target_link_libraries(game
 	${ALL_LIBS}
