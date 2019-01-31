@@ -1,4 +1,4 @@
-#define RESOLUTION_X 1024
-#define RESOLUTION_Y 768
+#define RESOLUTION_X 960
+#define RESOLUTION_Y 540
 #define MOUSE_SENSITIVITY 0.005f
 #define SHOW_FPS true

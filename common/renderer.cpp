@@ -80,9 +80,9 @@ int Renderer::init()
 	ModelView3x3MatrixID = glGetUniformLocation(programID, "MV3x3");
 
 	// Load the texture
-	DiffuseTexture = loadDDS("textures/diffuse.DDS");
-	NormalTexture = loadBMP_custom("textures/normal.bmp");
-	SpecularTexture = loadDDS("textures/specular.DDS");
+	DiffuseTexture = loadDDS("textures/lambo_defuse.DDS");
+	//NormalTexture = loadBMP_custom("textures/normal.bmp");
+	SpecularTexture = loadDDS("textures/lambo_specular.DDS");
 
 	// Get a handle for our "myTextureSampler" uniform
 	DiffuseTextureID = glGetUniformLocation(programID, "DiffuseTextureSampler");
@@ -90,7 +90,7 @@ int Renderer::init()
 	SpecularTextureID = glGetUniformLocation(programID, "SpecularTextureSampler");
 
 	// Read our .obj file
-	bool res = loadOBJ("../common/models/cylinder.obj", vertices, uvs, normals);
+	bool res = loadOBJ("../common/models/Lamborghini_Aventador.obj", vertices, uvs, normals);
 
 	std::vector<glm::vec3> tangents;
 	std::vector<glm::vec3> bitangents;
